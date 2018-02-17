@@ -89,7 +89,9 @@ class MQTTPublishPlugin(octoprint.plugin.SettingsPlugin,
 			message = cmd.split()[2]
 			try:
 				self.mqtt_publish(topic, message)
-			return
+				return
+			except:
+				self._plugin_manager.send_plugin_message(self._identifier, dict(noMQTT=True))
 	
 	##~~ Softwareupdate hook
 
