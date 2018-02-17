@@ -18,7 +18,7 @@ class MQTTPublishPlugin(octoprint.plugin.SettingsPlugin,
 			topics = [dict(topic="topic",publishcommand = "publishcommand",label="label",icon="icon-home",confirm=False)],
 			icon = "icon-home",
 			menugroupat = 4,
-			enableM117 = False
+			enableGCODE = False
 		)
 		
 	def get_settings_version(self):
@@ -84,12 +84,12 @@ class MQTTPublishPlugin(octoprint.plugin.SettingsPlugin,
 	
 	##~~ GCODE ProcessingHook
 	def processM117(self, comm_instance, phase, cmd, cmd_type, gcode, *args, **kwargs):
-		if gcode and cmd.startswith("M117") and cmd.count(" ") >= 2 and self._settings.get(["enableM117"]):
+		if gcode and cmd.startswith("@MQTTPublish") and cmd.count(" ") >= 2 and self._settings.get(["enableGCODE"]):
 			topic = cmd.split()[1]
 			message = cmd.split()[2]
 			try:
 				self.mqtt_publish(topic, message)
-				return
+				return None
 			except:
 				self._plugin_manager.send_plugin_message(self._identifier, dict(noMQTT=True))
 	
