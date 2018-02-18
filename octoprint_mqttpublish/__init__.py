@@ -3,7 +3,7 @@ from __future__ import absolute_import
 
 import octoprint.plugin
 from octoprint.server import user_permission
-
+import re
 
 class MQTTPublishPlugin(octoprint.plugin.SettingsPlugin,
                          octoprint.plugin.AssetPlugin,
@@ -94,15 +94,17 @@ class MQTTPublishPlugin(octoprint.plugin.SettingsPlugin,
 				return None
 			except:
 				self._plugin_manager.send_plugin_message(self._identifier, dict(noMQTT=True))
+				return
 		
 		if cmd.startswith("M117") and self._settings.get(["enableM117"]):
 			try:
 				topic = self._settings.get(["topicM117"])
-				message = cmd.split()[1]
+				message = re.sub(r'^M117\s?', '', cmd)
 				self.mqtt_publish(topic, message)
 				return
-			except:
-				self._plugin_manager.send_plugin_message(self._identifier, dict(noMQTT=True))
+			except e:
+				self._plugin_manager.send_plugin_message(self._identifier, dict(m117_error=True))
+				return
 	
 	##~~ Softwareupdate hook
 
