@@ -97,14 +97,10 @@ class MQTTPublishPlugin(octoprint.plugin.SettingsPlugin,
 				return
 		
 		if cmd.startswith("M117") and self._settings.get(["enableM117"]):
-			try:
-				topic = self._settings.get(["topicM117"])
-				message = re.sub(r'^M117\s?', '', cmd)
-				self.mqtt_publish(topic, message)
-				return
-			except e:
-				self._plugin_manager.send_plugin_message(self._identifier, dict(m117_error=True))
-				return
+			topic = self._settings.get(["topicM117"])
+			message = re.sub(r'^M117\s?', '', cmd)
+			self.mqtt_publish(topic, message)
+			return
 	
 	##~~ Softwareupdate hook
 
