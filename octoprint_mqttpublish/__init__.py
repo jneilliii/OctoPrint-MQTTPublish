@@ -20,7 +20,7 @@ class MQTTPublishPlugin(octoprint.plugin.SettingsPlugin,
 			menugroupat = 4,
 			enableGCODE = False,
 			enableM117 = False,
-			topicM117 = ''
+			topicM117 = ""
 		)
 		
 	def get_settings_version(self):
