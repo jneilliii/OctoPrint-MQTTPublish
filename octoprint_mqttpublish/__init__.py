@@ -100,6 +100,7 @@ class MQTTPublishPlugin(octoprint.plugin.SettingsPlugin,
 				topic = self._settings.get(["topicM117"])
 				message = cmd.split()[1]
 				self.mqtt_publish(topic, message)
+				return
 			except:
 				self._plugin_manager.send_plugin_message(self._identifier, dict(noMQTT=True))
 	
