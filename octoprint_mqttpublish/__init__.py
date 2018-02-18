@@ -84,6 +84,7 @@ class MQTTPublishPlugin(octoprint.plugin.SettingsPlugin,
 	
 	##~~ GCODE ProcessingHook
 	def processM117(self, comm_instance, phase, cmd, cmd_type, gcode, *args, **kwargs):
+		self._logger.info(cmd)
 		if gcode and cmd.startswith("@MQTTPublish") and cmd.count(" ") >= 2 and self._settings.get(["enableGCODE"]):
 			self._logger.info(cmd)
 			topic = cmd.split()[1]
