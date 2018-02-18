@@ -28,6 +28,7 @@ Once the MQTT plugin and this plugin are installed, configure the MQTT plugin fo
   - Icon: icon class name from [fontawesome](http://fontawesome.io/3.2.1/cheatsheet/) to show on button.
   - Confirm: show a confirmation prompt on sending message.
 - General
+  - @MQTTPublish GCODE: If enabled sending **@MQTTPublish topic message** GCODE command will publish the given message to given topic.
   - Menu Icon: icon class name from [fontawesome](http://fontawesome.io/3.2.1/cheatsheet/) to show in navbar.
   - Menu Button Grouping: Group buttons by this many and then start a new row in dropdown menu.
 
