@@ -43,6 +43,10 @@ $(function() {
 			self.menugroupat(self.settingsViewModel.settings.plugins.mqttpublish.menugroupat());
         }
 		
+		self.onSettingsShown = function() {
+			$('#settings_plugin_mqttpublish input.iconpicker').iconpicker({hideOnSelect: true});
+		}
+		
 		self.onEventSettingsUpdated = function(payload) {
 			self.topics(self.settingsViewModel.settings.plugins.mqttpublish.topics());
 			self.icon(self.settingsViewModel.settings.plugins.mqttpublish.icon());

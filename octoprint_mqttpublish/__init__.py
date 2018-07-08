@@ -56,7 +56,8 @@ class MQTTPublishPlugin(octoprint.plugin.SettingsPlugin,
 		# Define your plugin's asset files to automatically include in the
 		# core UI here.
 		return dict(
-			js=["js/mqttpublish.js"]
+			js=["js/mqttpublish.js","js/fontawesome-iconpicker.min.js"],
+			css=["css/fontawesome-iconpicker.min.css","css/all.css"]
 		)
 		
 	##~~ TemplatePlugin mixin

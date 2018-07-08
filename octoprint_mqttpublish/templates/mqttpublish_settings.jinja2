@@ -13,7 +13,7 @@
 			<div class="span3"><input type="text" class="span12" data-bind="value: topic"></div>
 			<div class="span2"><input type="text" class="span12" data-bind="value: publishcommand"></div>
 			<div class="span2"><input type="text" class="span12" data-bind="value: label"></div>
-			<div class="span2"><input type="text" class="span12" data-bind="value: icon"></div>
+			<div class="span2"><input type="text" class="span12 iconpicker" data-bind="value: icon"></div>
 			<div class="span1" style="text-align: center;"><input type="checkbox" data-bind="checked: confirm"/></div>
 			<div class="span2 btn-group" style="text-align: center;"><a href="#" class="btn btn-mini icon-copy" data-bind="click: $root.copyTopic"></a><a href="#" class="btn btn-mini icon-trash" data-bind="click: $root.removeTopic, visible: $root.settingsViewModel.settings.plugins.mqttpublish.topics().length > 1"></a></div>
 		</div>
@@ -40,7 +40,7 @@
 	<div class="control-group">
 		<label class="control-label">{{ _('Menu Icon') }}</label>
         <div class="controls">
-			<input type="text" class="input-text" data-bind="value: settingsViewModel.settings.plugins.mqttpublish.icon">
+			<input type="text" class="input-text iconpicker" data-bind="value: settingsViewModel.settings.plugins.mqttpublish.icon">
         </div>
 	</div>
 	<div class="control-group">
