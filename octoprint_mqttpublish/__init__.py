@@ -84,12 +84,12 @@ class MQTTPublishPlugin(octoprint.plugin.SettingsPlugin,
 			except:
 				self._plugin_manager.send_plugin_message(self._identifier, dict(noMQTT=True))
 	
-	##~~ GCODE ProcessingHook
+	##~~ GCODE Processing Hook
 	def processGCODE(self, comm_instance, phase, cmd, cmd_type, gcode, *args, **kwargs):
 		if cmd.startswith("@MQTTPublish") and self._settings.get(["enableGCODE"]):
 			try:
 				topic = cmd.split()[1]
-				message = cmd.split()[2]
+				message = ' '.join(cmd.split(' ')[2:])
 				self.mqtt_publish(topic, message)
 				return None
 			except:
@@ -101,13 +101,25 @@ class MQTTPublishPlugin(octoprint.plugin.SettingsPlugin,
 			message = re.sub(r'^M117\s?', '', cmd)
 			self.mqtt_publish(topic, message)
 			return
+			
+	##~~ Action Command Processing Hook
+	def processAction(self, comm, line, action, *args, **kwargs):
+		if not action.startswith("MQTTPublish"):
+			return
+			
+		if action.startswith("MQTTPublish"):
+			try:
+				topic = action.split()[1]
+				message = ' '.join(action.split(' ')[2:])
+				self.mqtt_publish(topic, message)
+				return None
+			except:
+				self._plugin_manager.send_plugin_message(self._identifier, dict(noMQTT=True))
+				return
 	
 	##~~ Softwareupdate hook
 
 	def get_update_information(self):
-		# Define the configuration for your plugin to use with the Software Update
-		# Plugin here. See https://github.com/foosel/OctoPrint/wiki/Plugin:-Software-Update
-		# for details.
 		return dict(
 			mqttpublish=dict(
 				displayName="MQTT Publish",
@@ -124,11 +136,8 @@ class MQTTPublishPlugin(octoprint.plugin.SettingsPlugin,
 			)
 		)
 
-
-# If you want your plugin to be registered within OctoPrint under a different name than what you defined in setup.py
-# ("OctoPrint-PluginSkeleton"), you may define that here. Same goes for the other metadata derived from setup.py that
-# can be overwritten via __plugin_xyz__ control properties. See the documentation for that.
 __plugin_name__ = "MQTT Publish"
+__plugin_pythoncompat__ = ">=2.7,<4"
 
 def __plugin_load__():
 	global __plugin_implementation__
@@ -137,6 +146,7 @@ def __plugin_load__():
 	global __plugin_hooks__
 	__plugin_hooks__ = {
 		"octoprint.comm.protocol.gcode.queuing": __plugin_implementation__.processGCODE,
-		"octoprint.plugin.softwareupdate.check_config": __plugin_implementation__.get_update_information
+		"octoprint.plugin.softwareupdate.check_config": __plugin_implementation__.get_update_information,
+		"octoprint.comm.protocol.action": __plugin_implementation__.processAction
 	}
 
