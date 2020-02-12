@@ -15,7 +15,7 @@ class MQTTPublishPlugin(octoprint.plugin.SettingsPlugin,
 
 	def get_settings_defaults(self):
 		return dict(
-			topics = [dict(topic="topic",publishcommand = "publishcommand",label="label",icon="icon-home",confirm=False)],
+			topics = [dict(topic="topic",publishcommand = "publishcommand",label="label",icon="icon-home",confirm=False,retained=False)],
 			icon = "icon-home",
 			menugroupat = 4,
 			enableGCODE = False,
@@ -24,11 +24,18 @@ class MQTTPublishPlugin(octoprint.plugin.SettingsPlugin,
 		)
 		
 	def get_settings_version(self):
-		return 1
+		return 2
 		
 	def on_settings_migrate(self, target, current=None):
-		if current is None or current < self.get_settings_version():
+		if current is None or current < 1:
 			self._settings.set(['topics'], self.get_settings_defaults()["topics"])
+		if current == 1:
+			topics_new = self._settings.get(['topics'])
+			for topic in topics_new:
+				# Add new fields and remove unused
+				if not topic.get("retained", False):
+					topic["retained"] = False
+			self._settings.set(["topics"],topics_new)
 		
 	##~~ StartupPlugin mixin
 	
@@ -42,7 +49,7 @@ class MQTTPublishPlugin(octoprint.plugin.SettingsPlugin,
 			if "mqtt_unsubscribe" in helpers:
 				self.mqtt_unsubscribe = helpers["mqtt_unsubscribe"]
 			
-			try:			
+			try:
 				self.mqtt_publish("octoprint/plugin/mqttpublish/pub", "OctoPrint-MQTTPublish publishing.")
 			except:
 				self._plugin_manager.send_plugin_message(self._identifier, dict(noMQTT=True))
@@ -79,9 +86,10 @@ class MQTTPublishPlugin(octoprint.plugin.SettingsPlugin,
 			
 		if command == 'publishcommand':
 			try:
-				self.mqtt_publish("{topic}".format(**data), "{publishcommand}".format(**data))
+				self.mqtt_publish("{topic}".format(**data), "{publishcommand}".format(**data), retained="{retained}".format(**data))
 				self._plugin_manager.send_plugin_message(self._identifier, dict(topic="{topic}".format(**data),publishcommand="{publishcommand}".format(**data)))
-			except:
+			except Exception, e:
+				self._logger.debug("Error: %s" % e)
 				self._plugin_manager.send_plugin_message(self._identifier, dict(noMQTT=True))
 	
 	##~~ GCODE Processing Hook
