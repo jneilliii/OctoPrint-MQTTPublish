@@ -63,6 +63,8 @@ Plugin supports a custom action command `MQTTPublish`. Configure your printer to
 #endif
 ```
 
+**NOTE:** Marlin versions 2.0.8 and above changed `#define CUSTOM_USER_MENUS` to `#define CUSTOM_MENU_MAIN`
+
 ## Get Help
 
 If you experience issues with this plugin or need assistance please use the issue tracker by clicking issues above.
