@@ -102,7 +102,7 @@ $(function() {
 		};
 
 		self.copyTopic = function(data) {
-			self.settingsViewModel.settings.plugins.mqttpublish.topics.push({'topic':ko.observable(data.topic()),'publishcommand':ko.observable(data.publishcommand()),'label':ko.observable(data.label()),'icon':ko.observable(data.icon()),'confirm':ko.observable(data.confirm()),'retained':ko.observable(data.retain())});
+			self.settingsViewModel.settings.plugins.mqttpublish.topics.push({'topic':ko.observable(data.topic()),'publishcommand':ko.observable(data.publishcommand()),'label':ko.observable(data.label()),'icon':ko.observable(data.icon()),'confirm':ko.observable(data.confirm()),'retained':ko.observable(data.retained())});
 		};
 
 		self.removeTopic = function(data) {
