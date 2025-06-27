@@ -1,0 +1,42 @@
+[build-system]
+requires = [
+    "setuptools>=68",
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "OctoPrint-MQTTPublish"
+version = "0.8.1"
+description = "Plugin to send MQTT command from button in navbar."
+authors = [
+    { name = "jneilliii", email = "jneilliii+github@gmail.com" },
+]
+requires-python = ">=3.7,<4"
+dependencies = []
+dynamic = [
+    "license",
+]
+
+[project.entry-points."octoprint.plugin"]
+mqttpublish = "octoprint_mqttpublish"
+
+[project.urls]
+Homepage = "https://github.com/jneilliii/OctoPrint-MQTTPublish"
+
+[project.optional-dependencies]
+develop = [
+    "go-task-bin",
+]
+
+[project.readme]
+file = "README.md"
+content-type = "markdown"
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+include = [
+    "octoprint_mqttpublish",
+    "octoprint_mqttpublish.*",
+]
