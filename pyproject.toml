@@ -34,9 +34,6 @@ content-type = "markdown"
 
 [tool.setuptools]
 include-package-data = true
-
-[tool.setuptools.packages.find]
-include = [
+packages = [
     "octoprint_mqttpublish",
-    "octoprint_mqttpublish.*",
 ]
