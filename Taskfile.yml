@@ -1,11 +1,17 @@
 
-# https://taskfile.dev
+# Taskfile to be used with task: https://taskfile.dev
+#
+# A copy of task gets automatically installed as a "develop" dependency this plugin:
+#
+#   pip install .[develop]
+#   go-task --list-all
+#
 
 version: "3"
 
 env:
     LOCALES: []  # list your included locales here, e.g. ["de", "fr"]
-    TRANSLATIONS: "octoprint_mqttpublish/translations"  # translations folder, do not touch
+    TRANSLATIONS: "octoprint_mqttpublish/translations"  # translations folder
 
 
 tasks:
@@ -37,8 +43,7 @@ tasks:
         desc: Create a new translation for a locale
         cmds:
           - task: babel-extract
-          - |
-                pybabel init --input-file=translations/messages.pot --output-dir=translations --locale="{{ .CLI_ARGS }}"
+          - pybabel init --input-file=translations/messages.pot --output-dir=translations --locale="{{ .CLI_ARGS }}"
 
     babel-extract:
         desc: Update pot file from source
@@ -69,7 +74,7 @@ tasks:
           - test -d {{ .TRANSLATIONS }}
         cmds:
           - for:
-                var: LOCALES
+               var: LOCALES
             cmd: |
                 locale="{{ .ITEM }}"
                 source="translations/${locale}"

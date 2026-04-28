@@ -2,7 +2,8 @@
 from __future__ import absolute_import
 
 import octoprint.plugin
-from octoprint.server import user_permission
+from flask_babel import gettext
+from octoprint.access.permissions import Permissions, ADMIN_GROUP
 from octoprint.settings import valid_boolean_trues
 import re
 
@@ -72,6 +73,9 @@ class MQTTPublishPlugin(octoprint.plugin.SettingsPlugin,
 
 	# ~~ TemplatePlugin mixin
 
+	def is_template_autoescaped(self):
+		return True
+
 	def get_template_configs(self):
 		return [
 			{'type': "navbar", 'custom_bindings': True},
@@ -80,11 +84,14 @@ class MQTTPublishPlugin(octoprint.plugin.SettingsPlugin,
 
 	# ~~ SimpleApiPlugin mixin
 
+	def is_api_protected(self):
+		return True
+
 	def get_api_commands(self):
 		return {'publishcommand': ["topic", "publishcommand"]}
 
 	def on_api_command(self, command, data):
-		if not user_permission.can():
+		if not Permissions.PLUGIN_MQTTPUBLISH_PUBLISH.can():
 			from flask import make_response
 			return make_response("Insufficient rights", 403)
 
@@ -134,6 +141,18 @@ class MQTTPublishPlugin(octoprint.plugin.SettingsPlugin,
 				self._plugin_manager.send_plugin_message(self._identifier, {'noMQTT': True})
 				return
 
+	# ~~ Access Permissions Hook
+
+	def get_additional_permissions(self, *args, **kwargs):
+		return [
+			dict(key="PUBLISH",
+			     name="Publish MQTT",
+			     description=gettext("Allows publishing MQTT commands"),
+			     roles=["admin"],
+			     dangerous=True,
+			     default_groups=[ADMIN_GROUP])
+		]
+
 	# ~~ Softwareupdate hook
 
 	def get_update_information(self):
@@ -155,5 +174,6 @@ def __plugin_load__():
 	__plugin_hooks__ = {
 		"octoprint.comm.protocol.gcode.queuing": __plugin_implementation__.processGCODE,
 		"octoprint.plugin.softwareupdate.check_config": __plugin_implementation__.get_update_information,
+		"octoprint.access.permissions": __plugin_implementation__.get_additional_permissions,
 		"octoprint.comm.protocol.action": __plugin_implementation__.processAction
 	}
